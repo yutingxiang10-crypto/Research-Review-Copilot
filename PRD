@@ -1,0 +1,157 @@
+1. 产品背景
+中文医学/药学研究生在进入新方向时，常见困难包括：
+- 不知道如何把中文主题转成英文检索式
+- 不熟悉 PubMed 检索逻辑和 MeSH 词
+- 面对大量英文摘要难以快速判断相关性
+- 不知道哪些文献适合支撑综述章节
+- 容易直接让 AI 写正文，导致引用不可靠和学术风险
+Research Review Copilot 的目标不是代写综述，而是把综述前期准备工作结构化、可视化、可追踪。
+2. 产品目标
+MVP 目标：
+让用户在 30-60 分钟内完成一次 Review Preparation 流程：
+1. 明确研究问题和检索范围
+2. 获得 50 篇 PubMed 候选文献
+3. 筛选 20 篇重点文献
+4. 获得中文结构化论文卡片
+5. 生成可编辑的综述框架
+3. 用户故事
+1. 作为中文研究生，我希望输入中文主题后，系统帮我生成英文检索策略。
+2. 作为医学/药学新手，我希望系统提示适合使用 PICO、PCC 还是普通主题框架。
+3. 作为英文阅读压力大的用户，我希望快速看到中文摘要和论文价值判断。
+4. 作为准备写综述的人，我希望先筛出重点文献，再生成详细卡片。
+5. 作为严谨写作者，我希望每个综述章节都有对应支撑文献。
+6. 作为反复修改选题的人，我希望保存不同版本的综述框架。
+4. 功能需求
+项目创建
+用户可输入：
+- 研究主题
+- 综述类型：Narrative Review / Systematic Review Preparation / Scoping Review
+- 默认类型：Review Preparation
+- 年份范围
+- 候选文献数量，默认 50
+- 精读卡片数量，默认最多 20
+Scope 页面
+系统展示：
+- 研究问题中文版本
+- 研究问题英文版本
+- 推荐综述框架：PICO / PCC / Topic Framework
+- PubMed 检索式
+- MeSH 词建议
+- 纳入标准
+- 排除标准
+用户可以：
+- 修改关键词
+- 修改纳排标准
+- 修改年份范围
+- 确认进入检索
+文献检索页面
+系统展示：
+- PubMed 候选文献列表
+- 标题
+- 作者
+- 年份
+- 期刊
+- PMID
+- DOI
+- 摘要
+- 文献类型
+- 相关性等级：High / Medium / Low
+- 相关性理由
+用户可以：
+- 保留文献
+- 排除文献
+- 按年份、相关性、文献类型筛选
+- 选择最多 20 篇生成论文卡片
+论文卡片页面
+系统展示：
+- 中文标题
+- 中文摘要
+- 研究问题
+- 研究设计
+- 证据等级
+- AI 方法
+- 医学/药学场景
+- 数据来源
+- 主要发现
+- 局限性
+- 综述价值
+- 建议放入章节
+Review Framework 页面
+系统生成：
+- 中英文拟题
+- 综述定位
+- 章节结构
+- 每章核心论点
+- 支撑文献
+- 研究空白
+- 未来方向
+- 当前证据局限
+- 后续写作建议
+用户可以：
+- 编辑章节
+- 保存版本
+- 复制内容
+- 导出 Markdown
+导出功能
+MVP 支持：
+- 文献列表 CSV
+- 论文卡片 CSV
+- 综述框架 Markdown
+- 简易 BibTeX
+5. 数据结构
+核心表：
+users
+projects
+review_scopes
+search_runs
+papers
+project_papers
+paper_cards
+review_versions
+agent_runs
+exports
+关键新增表：
+review_versions
+- id
+- project_id
+- version
+- title
+- outline_json
+- markdown_content
+- created_at
+- updated_at
+6. 成功指标
+Product Metric：
+- 完成一次 Review Preparation 流程时间 < 60 分钟
+- 从输入主题到获得候选文献 < 5 分钟
+- 用户能成功导出至少一种结果
+AI Metric：
+- PubMed 候选文献 Top 50 相关率
+- High relevance 文献中用户保留比例
+- Paper Card 字段完整率
+- Paper Card 人工抽查准确率
+User Metric：
+- 用户认为综述框架是否可继续修改使用
+- 用户是否愿意基于该结果继续阅读原文
+- 用户是否愿意创建第二个项目
+7. 推荐技术栈
+一周 MVP 推荐：
+- 前端：Next.js + React + TypeScript
+- UI：Tailwind CSS + shadcn/ui
+- 表格：TanStack Table
+- 后端：Next.js API Routes / Server Actions
+- 数据库：Supabase PostgreSQL
+- 认证：Supabase Auth
+- 存储：暂不需要 PDF Storage
+- AI：OpenAI API，结构化 JSON 输出
+- 文献数据：PubMed ESearch + EFetch / ESummary
+- 异步任务：数据库任务表 + 前端轮询
+- 暂不使用：LangChain、LangGraph、Redis、复杂 Worker
+8. 一周开发冻结范围
+Day 1：项目创建、数据库、基础页面
+Day 2：Scope Agent、检索策略确认页
+Day 3：PubMed 检索、候选文献列表
+Day 4：相关性评估、用户筛选
+Day 5：Paper Card Agent、批量生成卡片
+Day 6：Review Framework Agent、版本保存、导出
+Day 7：真实主题测试、UI 打磨、错误处理、Demo 准备
